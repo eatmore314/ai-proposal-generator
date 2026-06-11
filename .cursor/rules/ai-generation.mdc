@@ -1,0 +1,12 @@
+---
+description: Rules for AI generation — prompt management, streaming, and structured output shape
+globs: ["src/lib/claude.ts", "src/lib/prompts.ts", "src/app/api/**"]
+alwaysApply: false
+---
+
+- All prompt strings live in `src/lib/prompts.ts` only — never inline in routes or components.
+- Use `stream: true` on every Claude call — required to avoid Vercel/Edge timeouts on long responses.
+- Claude must return structured JSON with exactly these keys: `scope`, `timeline`, `quote`, `contract`, `questions`.
+- Each section must be independently renderable and editable in the UI — no monolithic blobs.
+- Do not hardcode model strings outside `src/lib/claude.ts`. Default model: `claude-opus-4-8`.
+- Validate that PDF text is non-empty and ≥ 100 characters before calling Claude; return a clear user-facing error if not.
