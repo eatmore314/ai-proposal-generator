@@ -1,0 +1,21 @@
+---
+description: Core behavioral rules for every coding task — think, simplify, be surgical, verify
+globs:
+alwaysApply: true
+---
+
+## Think Before Coding
+State assumptions before implementing. Surface ambiguity and options — don't hide confusion.
+Define what "working" looks like before writing any code (which field renders, what the check confirms).
+
+## Simplicity First
+Write the minimum code that solves the problem. No unrequested abstractions, features, or future-proofing.
+Three similar lines is better than a premature abstraction.
+
+## Surgical Changes
+Touch only what the request requires. Every changed line must trace back to the ask.
+Match existing file style and patterns exactly. Clean only your own mess.
+
+## Goal-Driven Execution
+Run `npm run typecheck && npm run lint` after every non-trivial change.
+Do not claim a feature works without verifying actual browser output.

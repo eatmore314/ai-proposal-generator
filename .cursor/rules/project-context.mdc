@@ -1,0 +1,46 @@
+---
+description: Project overview, tech stack, directory structure, commands, and data flow for the AI Proposal Generator
+globs:
+alwaysApply: true
+---
+
+## Overview
+Upload a client requirements PDF → generate: project scope, timeline, quote, contract draft, discovery questions.
+
+## Tech Stack
+- **Framework**: Next.js 14 (App Router, TypeScript)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **AI**: `@anthropic-ai/sdk` — default model `claude-opus-4-8`
+- **PDF parsing**: `pdf-parse` (server-side text extraction)
+- **Export**: `@react-pdf/renderer`
+- **Package manager**: `npm`
+
+## Project Structure
+```
+src/
+  app/
+    api/generate/   # Streaming AI generation endpoint
+    page.tsx        # Upload + proposal UI
+  components/       # UploadZone, ProposalSection, ExportButton
+  lib/
+    claude.ts       # Anthropic client + streaming helper
+    pdf.ts          # PDF extraction wrapper
+    prompts.ts      # ALL prompt templates — never inline elsewhere
+  types/index.ts    # ProposalOutput, Section types
+```
+
+## Commands
+- `npm run dev` — localhost:3000
+- `npm run build` — production build
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run lint` — ESLint
+
+## Core Data Flow
+1. User uploads PDF (max 10 MB, enforced client-side)
+2. `/api/generate` extracts text via `pdf-parse`, validates it's non-empty
+3. Streams prompt to Claude → returns JSON: `scope`, `timeline`, `quote`, `contract`, `questions`
+4. UI renders each section independently; user copies or exports as PDF
+
+## Architecture Decisions (MVP)
+- No database — generate and display/export in-session; add persistence only when explicitly requested
+- One API route (`/api/generate`) for all sections; split only if latency becomes a measured problem
