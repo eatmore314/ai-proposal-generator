@@ -2,32 +2,36 @@ import type { AdvancedOptions } from '@/types';
 
 /* ── Market rate calibration reference ── */
 const MARKET_RATES = `
-Market rate reference (use as calibration anchors — adjust for scope and region):
-- Software / web development (freelancer): $60–150/hr | projects $3K–$80K
-- Software / web development (agency): projects $15K–$250K+
-- Mobile app development: $10K–$150K depending on complexity
-- Digital marketing (agency): $1,500–$15,000/month retainer | $3K–$60K per campaign
-- SEO / content marketing: $500–$5,000/month
-- Social media management: $500–$5,000/month
-- Video production (corporate): $2,000–$50,000 per project
-- Video production (commercial/broadcast): $10,000–$200,000+
-- Photography: $100–$500/hr | $500–$15,000 per shoot
-- Graphic design / branding: $50–$150/hr | $1,000–$50,000 per project
-- UX / UI design: $75–$175/hr | $5,000–$60,000 per project
-- Copywriting: $0.10–$0.50/word | $500–$10,000 per project
-- Management consulting: $150–$500/hr | $5,000–$200,000+ engagements
-- IT consulting / infrastructure: $100–$250/hr
-- Business coaching: $100–$500/hr | $1,000–$5,000/month retainer
-- Construction (residential): $150–$500/sq ft
-- Construction (commercial): $100–$350/sq ft
-- General contractor / renovation: $50–$150/hr + materials
-- Interior design: $50–$200/hr + 10–30% procurement markup
-- Landscape / hardscape: $2,000–$50,000 per project
-- Event planning: 15–20% of event budget or $50–$150/hr
-- Accounting / bookkeeping: $25–$150/hr or $200–$2,500/month
-- Legal services: $150–$500/hr
-- PR / communications: $2,000–$10,000/month retainer
-- Recruiting / HR consulting: 15–30% of annual salary or $100–$250/hr
+Agency-level market rates by industry (use as the high-end anchor; derive Freelancer and Small Business from multipliers below):
+- Software / web development: projects $15K–$250K+ | $150–300/hr
+- Mobile app development: $20K–$200K depending on complexity
+- Digital marketing: $3,000–$15,000/month retainer | $5K–$80K per campaign
+- SEO / content marketing: $1,500–$8,000/month
+- Social media management: $1,500–$6,000/month
+- Video production (corporate): $5,000–$60,000 per project
+- Video production (commercial/broadcast): $20,000–$300,000+
+- Photography: $500–$5,000 per shoot | $150–500/hr
+- Graphic design / branding: $3,000–$80,000 per project
+- UX / UI design: $8,000–$100,000 per project
+- Copywriting: $1,000–$20,000 per project
+- Management consulting: $10,000–$300,000+ per engagement
+- IT consulting / infrastructure: $10,000–$150,000 per engagement
+- Business coaching: $2,000–$8,000/month retainer
+- Construction (residential): $150–$500/sq ft + materials
+- Construction (commercial): $100–$400/sq ft + materials
+- General contractor / renovation: $20,000–$500,000+ per project
+- Interior design: $10,000–$150,000 per project
+- Landscape / hardscape: $5,000–$80,000 per project
+- Event planning: 20–25% of event budget | $5,000–$50,000
+- Accounting / bookkeeping: $500–$4,000/month
+- Legal services: $5,000–$100,000+ per engagement
+- PR / communications: $4,000–$15,000/month retainer
+- Recruiting / HR consulting: $10,000–$80,000 per engagement
+
+Provider type pricing multipliers (apply to agency rates above):
+- Freelancer: 40–65% of agency rate (lower overhead, direct delivery, lean process)
+- Small Business: 60–80% of agency rate (moderate overhead, more structure than freelancer)
+- Agency: 100% — full market rate (formal PM, QA, documentation, larger teams)
 `.trim();
 
 function buildOverrides(opts: AdvancedOptions): string {
@@ -176,57 +180,86 @@ For ongoing retainer engagements, describe the monthly cadence:
 </timeline>
 
 <pricing>
-Generate a realistic pricing analysis calibrated for the **detected industry, service type, and complexity level**.
+Generate a provider-based pricing comparison. Your goal is to answer: "What would different types of providers realistically charge for this project?" — not to identify one correct price. Different providers legitimately charge different amounts for the same work.
 
-Use the market rate anchor identified in your analysis section. Do NOT default to software development hourly rates for non-software engagements.
+Use the market rate reference and provider multipliers provided above. Calibrate to the detected industry and complexity. Do NOT default to software development rates for non-software projects.
+
+---
+
+### Complexity Classification
+
+**Complexity:** [Simple / Moderate / Complex / Enterprise]
+
+[2–3 sentences explaining the classification. Reference specific factors from the requirements that drove this rating — scope size, number of deliverables, coordination required, integrations, risk level, or specialized expertise needed.]
 
 ---
 
 ### Estimate Confidence
 
-**Confidence Level:** [High / Medium / Low]
+**Confidence:** [High / Medium / Low]
 
-[2–3 sentences explaining the confidence level: what requirements details were present that support accurate estimation, and what was missing or ambiguous that introduces uncertainty. When confidence is Medium or Low, explain specifically what information would improve the estimate.]
-
----
-
-### Three-Tier Estimate
-
-| Tier | Investment | Best For |
-|------|-----------|---------|
-| **Low — Lean** | [amount or range] | [who chooses this and why] |
-| **Recommended** | [amount or range] | [who chooses this and why] |
-| **High — Premium** | [amount or range] | [who chooses this and why] |
+[2–3 sentences on confidence. Name the specific information that was present or missing. When confidence is Medium or Low, state explicitly what a client could provide to sharpen the estimate.]
 
 ---
 
-**🟢 Low — Lean**
-[Describe precisely what is included and what is cut to reach this price. Be specific and honest about the trade-offs. Use industry vocabulary.]
-*Investment: [$ amount or range]*
-
-**🔵 Recommended** *(Best Value)*
-[Describe what makes this the professional standard for this engagement type. What does the client get that makes it worth the additional investment over the lean option? This should be the estimate to present to clients as the recommended path.]
-*Investment: [$ amount or range]*
-
-**🟣 High — Premium**
-[Describe the additional polish, revisions, deliverables, documentation, or complexity buffer included at this tier. When would a client choose this over Recommended?]
-*Investment: [$ amount or range]*
+### Pricing Comparison
 
 ---
 
-### Pricing Rationale
-[2–3 sentences explaining why these specific numbers are appropriate for this industry and scope. Reference the complexity level and the key drivers of cost.]
+**Freelancer**
+*Solo operator · Independent consultant · One-person business*
+*Lower overhead · Lean delivery · Direct communication · Fast decisions*
+
+**Estimated range: [$ amount – $ amount]** *(or [$/month] for retainer engagements)*
+
+Why: [2–3 sentences: what the client receives at this price, what trade-offs exist, and why a solo provider can legitimately deliver at this rate for this type of project]
+
+---
+
+**Small Business**
+*Boutique agency · Small firm · Small consulting team*
+*More structure · Dedicated support · Additional revisions · Moderate overhead*
+
+**Estimated range: [$ amount – $ amount]**
+
+Why: [2–3 sentences: what additional value the client receives compared to a freelancer — extra process, account management, revision rounds, or quality assurance that justifies the higher rate]
+
+---
+
+**Agency**
+*Established agency · Larger firm · Enterprise-focused provider*
+*Formal project management · QA processes · Documentation · Dedicated account management*
+
+**Estimated range: [$ amount – $ amount]**
+
+Why: [2–3 sentences: what the premium pays for — team size, formal processes, risk mitigation, SLAs, onboarding, and documentation standards]
+
+---
+
+### Key Cost Drivers
+
+[Bullet list of 3–5 specific factors from THIS project that most influence the price across all three provider types. Be concrete — name the actual deliverables, integrations, or complexity factors, not generic statements.]
 
 ---
 
 ### Payment Structure
-[Recommend a payment structure appropriate for this type of engagement:
-- Projects: milestone-based with percentages and specific trigger events
-- Retainers: monthly billing terms and net days
-- Packages: upfront or split options
-Provide specific dollar amounts based on the Recommended tier.]
 
-*Estimate valid for 30 days. Final investment confirmed after discovery call.*
+[Recommend a payment structure appropriate for this industry and engagement type. Use the Small Business range as the reference for specific amounts.
+- Projects: milestone-based with named trigger events and percentages
+- Retainers: monthly billing cycle, net terms, minimum commitment
+- Packages: upfront percentage + balance on delivery]
+
+*Estimates valid for 30 days. Final investment confirmed after discovery call.*
+
+---
+
+### Future Opportunities
+
+*Include this section ONLY if the requirements explicitly mention features or work intended for a future phase or roadmap.*
+
+[List future-phase items with rough additional investment ranges by provider type. State clearly these are NOT included in current pricing above.]
+
+*Omit this section entirely if the requirements contain no future-phase items.*
 </pricing>
 
 <assumptions>

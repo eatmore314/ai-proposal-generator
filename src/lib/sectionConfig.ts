@@ -35,9 +35,9 @@ export const SECTION_CONFIG: Record<SectionKey, SectionMeta> = {
     description: 'Phased delivery plan with milestones',
   },
   pricing: {
-    label:       'Pricing Estimates',
+    label:       'Pricing Comparison',
     Icon:        DollarSign,
-    description: 'Three-tier estimates with confidence score and rationale',
+    description: 'What freelancers, small businesses, and agencies would charge',
   },
   assumptions: {
     label:       'Assumptions',

@@ -12,49 +12,90 @@ Detailed rule specs live in `.cursor/rules/`:
 | `ai-generation.mdc` | auto: `lib/claude.ts`, `lib/prompts.ts`, `api/**` | Prompts, streaming, JSON output shape |
 | `data-handling.mdc` | auto: `lib/pdf.ts`, `api/**`, `.env*` | PDF validation, size limits, secrets |
 
+## Pricing Derivation Order
+
+Pricing must be derived from project complexity first. Never begin with hourly rates.
+
+Determine in this order:
+
+1. **Industry** — what sector and service type is this?
+2. **Complexity** — how hard is the work?
+3. **Scope** — what exactly will be delivered?
+4. **Deliverables** — what tangible outputs does the client receive?
+5. **Risk** — what unknowns could expand effort?
+
+Then estimate effort. Then generate:
+
+- **Low Estimate** — lean, minimum viable, deliberate trade-offs named
+- **Recommended Estimate** — professional standard, right balance of quality and cost
+- **High Estimate** — premium, additional polish, full risk buffer
+
+Then map those estimates to market pricing for the detected industry. Only after pricing has been established should the proposal sections be written.
+
+---
+
 ## Proposal Estimation Engine Rules
 
-These rules govern how the quote section is generated. They live in `src/lib/prompts.ts` and must be preserved when editing prompts.
+These rules govern how the `pricing` section is generated. They live in `src/lib/prompts.ts` and must be preserved when editing prompts.
+
+### Pricing Philosophy
+
+ProposalAI generates **provider-based pricing comparisons** — not a single "correct" price.
+
+The core question is: *"What would different types of providers realistically charge for this project?"*
+
+Users never select a provider type. The AI always generates all three perspectives automatically.
 
 ### Provider Types
 
-Three provider types shape all pricing. Selected by the user before generation; passed as `providerType` in the form data.
+| Provider | Overhead | Profile |
+|----------|----------|---------|
+| **Freelancer** | Low | Solo operator, independent consultant, or one-person business. Lean delivery, direct communication, fast decisions, minimal PM overhead. |
+| **Small Business** | Moderate | Boutique agency, small firm, or small consulting team. More structure, dedicated support, additional revisions, moderate overhead. |
+| **Agency** | High | Established agency, larger firm, or enterprise-focused provider. Formal PM, QA, dedicated account management, documentation, larger delivery teams. |
 
-| Provider | Rate Range | Blended Rate | Profile |
-|----------|-----------|-------------|---------|
-| `independent` | $50–$100/hr | ~$65–75/hr | Solo AI-assisted engineer. Uses Claude Code, managed services, existing frameworks. No team overhead. Lean estimates. |
-| `consultant` | $100–$175/hr | ~$125–150/hr | Experienced freelancer or small firm. More planning, testing, documentation, and support. |
-| `agency` | $175–$300/hr | ~$200–250/hr | Team engagement with PM, QA, formal process. Significantly higher due to overhead. |
+**Pricing relationship:** Freelancer rates are typically 40–65% of Agency rates for equivalent scope. Small Business rates are typically 60–80% of Agency rates.
 
-**Independent Builder estimates must be meaningfully lower than agency estimates.** Do not inflate independent estimates to match agency norms.
+### Complexity Classification
 
-### Complexity Scoring
+Classify every project into one of four levels:
 
-13 factors, each scored 0–3 (max: 39). Score every factor that appears in the requirements:
+| Level | Indicators |
+|-------|-----------|
+| **Simple** | Clear scope, few deliverables, standard process, low risk |
+| **Moderate** | Some complexity, multiple deliverables, coordination required |
+| **Complex** | Many moving parts, integrations, specialized expertise, higher risk |
+| **Enterprise** | Large scope, compliance requirements, formal processes, multi-team |
 
-Authentication · User Roles/Permissions · Dashboards · File Uploads · OCR · Search · AI/ML · Integrations · Security · Compliance · Deployment · Data Migration · Training
+### Pricing Derivation Order
 
-Derive **Complexity Rating** (Low/Medium/High/Very High), **Risk Level**, and **Confidence** from the total score.
+1. Determine industry and service type from the uploaded document
+2. Classify complexity (Simple / Moderate / Complex / Enterprise)
+3. Assess confidence (High / Medium / Low) — flag missing information that affects the estimate
+4. Estimate likely scope and effort
+5. Generate three provider-perspective ranges: Freelancer / Small Business / Agency
+6. Map to market rates for the detected industry and region
+7. Write all other proposal sections using the established pricing as context
 
-### Three-Tier Output (always generate all three)
+### Three-Provider Output (always generate all three)
 
-- **Low — Lean MVP**: fastest implementation, must-haves only, deliberate trade-offs named
-- **Recommended — Production-Ready**: best balance of speed, quality, security, maintainability — lead with this
-- **High — Polished + Buffer**: additional testing, documentation, scalability, implementation buffer
+- **Freelancer**: Solo/lean delivery, lower overhead, direct communication
+- **Small Business**: More structure, support, and revisions, moderate overhead
+- **Agency**: Full process, PM, QA, documentation, enterprise-ready delivery
 
 ### Special Rules
 
-- **Only estimate what is in the current scope.** Future roadmap items → `Future Opportunities` section only; never in Phase 1 pricing.
-- **Sensitive data** (healthcare/HIPAA, education/FERPA, finance/PCI, legal) → add security hardening and compliance review time.
-- **Explain the estimate**: reference the complexity score and key factors that drive cost.
-- **Do not deflate or inflate artificially.** Favor realistic numbers for each provider type.
+- **Only estimate the current scope.** Future roadmap items → `Future Opportunities` only; never in current pricing.
+- **Do not inflate estimates.** Do not assume enterprise requirements unless explicitly stated in the document.
+- **Sensitive data** (HIPAA, FERPA, PCI, legal) → add compliance and security line items across all three tiers.
+- **Explain the estimate**: reference the complexity classification and key cost drivers.
 
 ### Calibration Reference
 
-CampusCore-style project (auth, RBAC, dashboards, file uploads, OCR, search, deployment, training):
+Software project (auth, RBAC, dashboards, file uploads, OCR, search, deployment, training):
 
 | Provider | Range |
 |----------|-------|
-| Independent Builder | $6,000–$12,000 |
-| Mid-Level Consultant | $12,000–$22,000 |
-| Agency | $25,000–$50,000+ |
+| Freelancer | $8,000–$15,000 |
+| Small Business | $15,000–$28,000 |
+| Agency | $30,000–$60,000+ |

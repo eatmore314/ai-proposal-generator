@@ -53,7 +53,7 @@ const DELIVERABLES = [
   { icon: ClipboardList, label: 'Project Summary'      },
   { icon: Layers,        label: 'Scope of Work'        },
   { icon: Clock,         label: 'Timeline'             },
-  { icon: DollarSign,    label: 'Pricing Estimates'    },
+  { icon: DollarSign,    label: 'Pricing Comparison'   },
   { icon: FileText,      label: 'Agreement Draft'      },
   { icon: HelpCircle,    label: 'Discovery Questions'  },
 ] as const;
@@ -288,8 +288,9 @@ export default function Home() {
                           }}
                         >
                           ProposalAI reads your requirements PDF, auto-detects the
-                          industry, and generates a tailored proposal package —
-                          scope, timeline, pricing, agreement, and discovery questions.
+                          industry, and generates a complete proposal — including
+                          what freelancers, small businesses, and agencies would
+                          each charge for the work.
                         </p>
                       </div>
 
