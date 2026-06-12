@@ -121,7 +121,23 @@ export default function ProposalSection({ title, content, Icon }: Props) {
           '--tw-prose-td-borders':     'var(--c-border)',
         } as React.CSSProperties}
       >
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            // Wide pricing/calibration tables scroll horizontally on small
+            // screens instead of forcing the whole page to overflow.
+            table({ node, ...props }) {
+              void node;
+              return (
+                <div className="md-table-scroll">
+                  <table {...props} />
+                </div>
+              );
+            },
+          }}
+        >
+          {content}
+        </ReactMarkdown>
       </div>
     </div>
   );

@@ -40,17 +40,17 @@ export default function ProposalOutput({ sections, fileName }: Props) {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
 
       {/* ── Toolbar ── */}
-      <div className="flex items-center justify-between mb-6 no-print">
-        <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 no-print">
+        <div className="min-w-0">
           <h2 className="text-xl font-bold tracking-tight" style={{ color: 'var(--c-text)' }}>
             Proposal ready
           </h2>
-          <p className="text-xs mt-0.5 truncate max-w-xs" style={{ color: 'var(--c-text-3)' }}>
+          <p className="text-xs mt-0.5 truncate max-w-full sm:max-w-xs" style={{ color: 'var(--c-text-3)' }}>
             {fileName}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <motion.button
             onClick={downloadMarkdown}
             whileHover={{ scale: 1.02 }}
@@ -129,7 +129,7 @@ export default function ProposalOutput({ sections, fileName }: Props) {
         id={`panel-${activeTab}`}
         role="tabpanel"
         aria-labelledby={`tab-${activeTab}`}
-        className="no-print rounded-b-2xl rounded-tr-2xl p-8"
+        className="no-print rounded-b-2xl rounded-tr-2xl p-5 sm:p-8"
         style={{
           border: '1px solid var(--c-border)',
           borderTop: 'none',
