@@ -179,7 +179,7 @@ export default function Home() {
             borderBottom: '1px solid var(--c-border)',
           }}
         >
-          <div className="max-w-6xl mx-auto px-6 h-[54px] flex items-center justify-between">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-[54px] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               {/* ProposalAI logo — stacked pages mark */}
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -234,7 +234,7 @@ export default function Home() {
         </header>
 
         {/* ── Main content — animated state machine ── */}
-        <main className="max-w-6xl mx-auto px-6">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6">
           <AnimatePresence mode="wait">
 
             {/* IDLE: hero + upload */}
@@ -269,17 +269,19 @@ export default function Home() {
                         <h1
                           className="font-bold"
                           style={{
-                            fontSize: 'clamp(2.0rem, 4.0vw, 2.9rem)',
-                            lineHeight: 1.07,
+                            fontSize: 'clamp(1.75rem, 6vw, 2.9rem)',
+                            lineHeight: 1.1,
                             letterSpacing: '-0.032em',
                             color: 'var(--c-text)',
                           }}
                         >
                           Upload any client brief.
-                          <br />
-                          Get a complete
-                          <br />
-                          project proposal.
+                          {/* Forced breaks only on larger screens; on mobile the
+                              text wraps naturally to avoid awkward double-wraps. */}
+                          <br className="hidden sm:inline" />
+                          {' '}Get a complete
+                          <br className="hidden sm:inline" />
+                          {' '}project proposal.
                         </h1>
 
                         <p
@@ -498,7 +500,8 @@ export default function Home() {
                                 background: 'none',
                                 border: 'none',
                                 cursor: 'pointer',
-                                padding: '2px 0',
+                                padding: '8px 0',
+                                minHeight: '36px',
                                 transition: 'color 0.15s',
                               }}
                               onMouseEnter={e => (e.currentTarget.style.color = 'var(--c-text-2)')}

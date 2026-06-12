@@ -41,6 +41,56 @@
   }
 }
 
+/* ── Mobile responsiveness ── */
+
+/* Safety net so a stray wide element can't force horizontal page scroll.
+   Scoped to body (not html) to avoid interfering with the sticky header. */
+body {
+  overflow-x: hidden;
+}
+
+/* Use the dynamic viewport height on mobile so layout doesn't jump as the
+   browser's address bar shows/hides. Falls back to 100vh where unsupported. */
+@supports (min-height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+}
+
+/* Long unbroken strings (URLs, IDs) wrap instead of overflowing. */
+.prose {
+  overflow-wrap: anywhere;
+}
+
+/* Markdown tables are often wider than a phone. The .md-table-scroll wrapper
+   (added in ProposalSection) lets a wide table scroll horizontally on its own
+   rather than breaking the whole page layout. */
+.md-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.25rem 0;
+}
+.md-table-scroll > table {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  /* iOS Safari zooms the page whenever a focused control's font-size is < 16px.
+     Forcing 16px on form controls keeps focus from triggering that zoom jump. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Comfortable touch targets for form controls. */
+  input:not([type='file']),
+  select,
+  textarea {
+    min-height: 44px;
+  }
+}
+
 /* ── Print styles ── */
 .print-only {
   display: none;
