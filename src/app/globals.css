@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ── */
+:root {
+  --c-bg: #ffffff;
+  --c-surface: #f9f8f6;
+  --c-surface-2: #f2f0ec;
+  --c-border: #e5e3de;
+  --c-border-strong: #ccc9c2;
+  --c-text: #111118;
+  --c-text-2: #706d68;
+  --c-text-3: #a8a49e;
+  --c-primary: #111118;
+  --c-primary-hover: #2a2a38;
+  --c-gold: #c9973a;
+  --c-gold-light: rgba(201, 151, 58, 0.10);
+  --c-gold-muted: rgba(201, 151, 58, 0.45);
+  --c-success: #16a34a;
+  --c-success-bg: #f0fdf4;
+  --c-success-border: #bbf7d0;
+  --c-error: #dc2626;
+  --c-error-bg: #fff1f2;
+  --c-error-border: #fecdd3;
+}
+
+@layer base {
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--c-primary);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+}
+
+/* ── Print styles ── */
+.print-only {
+  display: none;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: white !important;
+    font-size: 11pt;
+    color: #0f172a;
+  }
+  .prose {
+    max-width: 100% !important;
+  }
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+  .print-section {
+    page-break-before: always;
+  }
+  .print-section:first-child {
+    page-break-before: auto;
+  }
+}

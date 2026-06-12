@@ -1,0 +1,10 @@
+---
+description: PDF processing limits, input validation, and secret management rules
+globs: ["src/lib/pdf.ts", "src/app/api/**", ".env*"]
+alwaysApply: false
+---
+
+- Enforce a 10 MB PDF size limit client-side before upload — reject with a descriptive message, not a generic error.
+- If extracted PDF text is empty or < 100 characters, surface a specific error; do not proceed to call Claude.
+- `ANTHROPIC_API_KEY` lives in `.env.local` only — never commit, log, expose in client bundles, or return in API responses.
+- No other secrets (tokens, keys) may appear in any committed file.
