@@ -1,11 +1,17 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 interface Props {
   onComplete: () => void;
 }
+
+// Runs before the browser paints on the client (so GSAP's start state and
+// first frame land without a flash), but falls back to useEffect during SSR
+// to avoid React's "useLayoutEffect on the server" warning.
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function IntroAnimation({ onComplete }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,7 +27,7 @@ export default function IntroAnimation({ onComplete }: Props) {
     });
   }, [onComplete]);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
@@ -98,6 +104,7 @@ export default function IntroAnimation({ onComplete }: Props) {
         className="rb-glow-bg"
         aria-hidden="true"
         style={{
+          opacity: 0,
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
@@ -120,6 +127,8 @@ export default function IntroAnimation({ onComplete }: Props) {
         <div
           className="rb-box"
           style={{
+            opacity: 0,
+            transform: 'scale(0.80) translateY(22px)',
             width: '196px',
             perspective: '820px',
             perspectiveOrigin: '50% 108%',
@@ -196,6 +205,7 @@ export default function IntroAnimation({ onComplete }: Props) {
               className="rb-glow-int"
               aria-hidden="true"
               style={{
+                opacity: 0,
                 position: 'absolute',
                 inset: 0,
                 background:
@@ -208,10 +218,11 @@ export default function IntroAnimation({ onComplete }: Props) {
               className="rb-ring"
               aria-hidden="true"
               style={{
+                opacity: 0,
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
+                transform: 'translate(-50%, -50%) scale(0)',
                 width: '42px',
                 height: '42px',
                 borderRadius: '50%',
@@ -269,6 +280,8 @@ export default function IntroAnimation({ onComplete }: Props) {
           className="rb-tagline"
           aria-hidden="true"
           style={{
+            opacity: 0,
+            transform: 'translateY(10px)',
             marginTop: '38px',
             fontSize: '9.5px',
             fontWeight: 600,

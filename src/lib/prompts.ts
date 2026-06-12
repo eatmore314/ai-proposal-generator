@@ -1,16 +1,68 @@
-import type { AdvancedOptions } from '@/types';
+import type { AdvancedOptions, ProviderCategory } from '@/types';
 
-/* ── Market rate calibration reference ── */
+/* ── Provider category configuration ── */
+
+const CATEGORY_LABELS: Record<ProviderCategory, string> = {
+  'freelancer':     'Freelancer',
+  'small-business': 'Small Business',
+  'agency':         'Corporation / Agency',
+};
+
+const PRICING_CALIBRATION = `
+PRICING CALIBRATION — MUST USE THESE RANGES (only exceed upper bound if explicit scope requires it):
+
+| Complexity  | Freelancer          | Small Business       | Agency                  |
+|-------------|---------------------|----------------------|-------------------------|
+| Simple      | $500 – $2,500       | $1,500 – $5,000      | $5,000 – $15,000        |
+| Moderate    | $2,500 – $8,000     | $6,000 – $15,000     | $12,000 – $30,000       |
+| Complex     | $7,500 – $18,000    | $15,000 – $35,000    | $30,000 – $75,000       |
+| Enterprise  | Scope down to MVP   | $35,000 – $75,000    | $75,000 – $150,000+     |
+
+CAMPUSCORE CALIBRATION ANCHOR (auth, RBAC, dashboards, file uploads, OCR, search, deployment, training — Complex):
+- Freelancer: $7,500–$22,000 (Low $7,500–$10,000 | Rec $10,000–$16,000 | High $16,000–$22,000)
+- Small Business: $15,000–$40,000
+- Agency: $30,000–$75,000
+`.trim();
+
+const CATEGORY_RULES: Record<ProviderCategory, string> = {
+  'freelancer': `
+FREELANCER RULES — STRICTLY ENFORCE:
+- You are pricing for a SOLO provider. Do NOT use agency pricing.
+- A skilled solo freelancer with modern tools (AI-assisted, managed services, existing frameworks) can legitimately deliver at 40–65% of agency rates.
+- Do NOT add overhead for project managers, QA teams, account management, or formal documentation layers.
+- For Moderate complexity: default to the LOWER half of the $2,500–$8,000 range unless explicit scope demands the upper half.
+- For Complex projects: use $7,500–$18,000. Do NOT quote $25,000+ for a freelancer on a complex project.
+- For Enterprise complexity: DO NOT quote enterprise prices. Note the project scale, recommend a phased MVP approach, and price Phase 1 within the Complex range.
+- Do not auto-classify school, healthcare, or legal projects as Enterprise unless the document explicitly requires strict compliance, large-scale integrations, or thousands of users.
+  `.trim(),
+
+  'small-business': `
+SMALL BUSINESS RULES:
+- You are pricing for a small team or boutique firm. Add moderate overhead: project coordination, extra revisions, some support — but this is NOT an agency.
+- Prices should be meaningfully lower than Agency rates. Small Business is 60–80% of agency pricing.
+- For Enterprise complexity: use $35,000–$75,000.
+- Include light PM and quality review but do not add formal enterprise delivery processes.
+  `.trim(),
+
+  'agency': `
+CORPORATION / AGENCY RULES:
+- Full market rates including PM, QA, documentation, account management, formal process.
+- Still should not inflate beyond the explicit scope in the requirements document.
+- Enterprise classification requires explicit evidence: compliance mandates, large-scale integrations, multi-team delivery, or strict regulatory requirements.
+  `.trim(),
+};
+
+/* ── Industry-level market reference (for non-software industries) ── */
 const MARKET_RATES = `
-Agency-level market rates by industry (use as the high-end anchor; derive Freelancer and Small Business from multipliers below):
-- Software / web development: projects $15K–$250K+ | $150–300/hr
+Agency-level market rates by industry (use as the high-end anchor for Agency estimates; derive Freelancer and Small Business from calibration table above):
+- Software / web development: $15K–$250K+ per project
 - Mobile app development: $20K–$200K depending on complexity
-- Digital marketing: $3,000–$15,000/month retainer | $5K–$80K per campaign
+- Digital marketing: $3,000–$15,000/month | $5K–$80K per campaign
 - SEO / content marketing: $1,500–$8,000/month
 - Social media management: $1,500–$6,000/month
 - Video production (corporate): $5,000–$60,000 per project
-- Video production (commercial/broadcast): $20,000–$300,000+
-- Photography: $500–$5,000 per shoot | $150–500/hr
+- Video production (commercial): $20,000–$300,000+
+- Photography: $500–$5,000 per shoot | $150–$500/hr
 - Graphic design / branding: $3,000–$80,000 per project
 - UX / UI design: $8,000–$100,000 per project
 - Copywriting: $1,000–$20,000 per project
@@ -27,11 +79,6 @@ Agency-level market rates by industry (use as the high-end anchor; derive Freela
 - Legal services: $5,000–$100,000+ per engagement
 - PR / communications: $4,000–$15,000/month retainer
 - Recruiting / HR consulting: $10,000–$80,000 per engagement
-
-Provider type pricing multipliers (apply to agency rates above):
-- Freelancer: 40–65% of agency rate (lower overhead, direct delivery, lean process)
-- Small Business: 60–80% of agency rate (moderate overhead, more structure than freelancer)
-- Agency: 100% — full market rate (formal PM, QA, documentation, larger teams)
 `.trim();
 
 function buildOverrides(opts: AdvancedOptions): string {
@@ -87,14 +134,20 @@ function buildOverrides(opts: AdvancedOptions): string {
 
 export function buildProposalPrompt(
   requirements: string,
+  providerCategory: ProviderCategory,
   options: AdvancedOptions,
 ): string {
-  const overrides = buildOverrides(options);
+  const categoryLabel = CATEGORY_LABELS[providerCategory];
+  const overrides     = buildOverrides(options);
 
   return `You are a senior proposal consultant. You create complete, professional proposal packages for service businesses across every industry. You adapt your language, deliverables, pricing model, and contract clauses based on what the client actually does — not generic software templates.
 
-${overrides}
-MARKET RATE REFERENCE (for calibrating estimates):
+${overrides}SELECTED PROVIDER CATEGORY: ${categoryLabel}
+${CATEGORY_RULES[providerCategory]}
+
+${PRICING_CALIBRATION}
+
+MARKET RATE REFERENCE (for calibrating industry-specific estimates):
 ${MARKET_RATES}
 
 CRITICAL OUTPUT RULE: Output ONLY the XML-tagged sections below, in exact order. No text before <analysis> and no text after </agreement>.
@@ -105,12 +158,12 @@ Perform a rapid internal analysis of the requirements document. This section is 
 **Detected Industry:** [Be specific: e.g., "E-commerce Web Development", "Brand Identity & Graphic Design", "Corporate Video Production", "Commercial HVAC Installation", "Digital Marketing Agency", "Wedding Photography", "Business Strategy Consulting"]
 **Service Category:** [Specific service type within that industry]
 **Project Type:** [One-time project / Ongoing retainer / Phase-based / Mixed]
-**Complexity Level:** [Low / Medium / High / Very High] — one-line justification
+**Complexity Level:** [Simple / Moderate / Complex / Enterprise] — one-line justification using the four-tier classification from the calibration table above
 **Recommended Pricing Model:** [Fixed-price / Hourly / Milestone-based / Monthly retainer / Package / T&M] — one sentence explaining why this model fits
 **Confidence Level:** [High / Medium / Low]
 **Confidence Reasoning:** [2 sentences: what details were present or absent that drove this rating]
 **Missing Information:** [2–4 specific gaps that affect estimate quality, or "Requirements appear sufficiently detailed"]
-**Pricing Anchor:** [The specific market rate range from the calibration table above that applies to this engagement, plus any regional or complexity adjustments]
+**Pricing Anchor (${categoryLabel}):** [The specific range from the calibration table for this complexity level and provider category, plus any regional or industry-specific adjustments]
 **Key Assumptions:** [3 assumptions you are making based on what is and is not stated in the document]
 </analysis>
 
@@ -132,8 +185,9 @@ Write a concise Project Summary (structured overview, not a cover letter):
 |-------|--------|
 | Industry | [detected industry] |
 | Project Type | [type] |
+| Provider Category | ${categoryLabel} |
 | Pricing Model | [recommended model] |
-| Estimated Investment | [range, e.g., "$8,000–$14,000" or "$2,500/month"] |
+| Estimated Investment | [recommended estimate range from pricing section] |
 | Estimated Timeline | [e.g., "6–9 weeks" or "Ongoing, 3-month minimum"] |
 | Confidence | [High / Medium / Low — one-line reason] |
 
@@ -180,84 +234,69 @@ For ongoing retainer engagements, describe the monthly cadence:
 </timeline>
 
 <pricing>
-Generate a provider-based pricing comparison. Your goal is to answer: "What would different types of providers realistically charge for this project?" — not to identify one correct price. Different providers legitimately charge different amounts for the same work.
+PROVIDER CATEGORY: ${categoryLabel}
+${CATEGORY_RULES[providerCategory]}
 
-Use the market rate reference and provider multipliers provided above. Calibrate to the detected industry and complexity. Do NOT default to software development rates for non-software projects.
-
----
-
-### Complexity Classification
-
-**Complexity:** [Simple / Moderate / Complex / Enterprise]
-
-[2–3 sentences explaining the classification. Reference specific factors from the requirements that drove this rating — scope size, number of deliverables, coordination required, integrations, risk level, or specialized expertise needed.]
+Use the calibration table embedded in this prompt. Your three estimates (Low, Recommended, High) MUST fall within the ranges for "${categoryLabel}" at the detected complexity level. Only exceed the upper bound if the explicit scope makes it unavoidable — state why if you do.
 
 ---
 
-### Estimate Confidence
+### Pricing Summary
 
-**Confidence:** [High / Medium / Low]
-
-[2–3 sentences on confidence. Name the specific information that was present or missing. When confidence is Medium or Low, state explicitly what a client could provide to sharpen the estimate.]
-
----
-
-### Pricing Comparison
+**Provider Category:** ${categoryLabel}
+**Detected Industry:** [from analysis]
+**Project Complexity:** [Simple / Moderate / Complex / Enterprise — one-line justification]
+**Pricing Confidence:** [High / Medium / Low — one-line reason. If requirements are vague: lower confidence, do NOT increase price.]
 
 ---
 
-**Freelancer**
-*Solo operator · Independent consultant · One-person business*
-*Lower overhead · Lean delivery · Direct communication · Fast decisions*
+### Estimates
 
-**Estimated range: [$ amount – $ amount]** *(or [$/month] for retainer engagements)*
+**Low Estimate: $[X,XXX] – $[X,XXX]**
+[What is included at this price. What trade-offs were made to stay lean. Appropriate for clients with a tight budget or narrow scope.]
 
-Why: [2–3 sentences: what the client receives at this price, what trade-offs exist, and why a solo provider can legitimately deliver at this rate for this type of project]
+**Recommended Estimate: $[X,XXX] – $[X,XXX]** *(Best fit for most clients)*
+[What the client gets at this level. Why this is the standard delivery path. What makes this the right balance of cost and quality.]
 
----
-
-**Small Business**
-*Boutique agency · Small firm · Small consulting team*
-*More structure · Dedicated support · Additional revisions · Moderate overhead*
-
-**Estimated range: [$ amount – $ amount]**
-
-Why: [2–3 sentences: what additional value the client receives compared to a freelancer — extra process, account management, revision rounds, or quality assurance that justifies the higher rate]
+**High Estimate: $[X,XXX] – $[X,XXX]**
+[Additional scope, extra revisions, polish, testing, or implementation buffer included at this level. When a client would choose this over Recommended.]
 
 ---
 
-**Agency**
-*Established agency · Larger firm · Enterprise-focused provider*
-*Formal project management · QA processes · Documentation · Dedicated account management*
+### Pricing Rationale
 
-**Estimated range: [$ amount – $ amount]**
-
-Why: [2–3 sentences: what the premium pays for — team size, formal processes, risk mitigation, SLAs, onboarding, and documentation standards]
+[2–3 sentences explaining why these numbers are appropriate for a ${categoryLabel} on this specific project. Reference the complexity classification and the 2–3 key scope factors that most drove the estimate.]
 
 ---
 
-### Key Cost Drivers
+### Key Assumptions
 
-[Bullet list of 3–5 specific factors from THIS project that most influence the price across all three provider types. Be concrete — name the actual deliverables, integrations, or complexity factors, not generic statements.]
+[3–5 bullet points: assumptions about scope, existing infrastructure, client responsibilities, or industry-specific factors that affect the price. If any assumption is wrong, the price changes.]
+
+---
+
+### What Would Increase the Price
+
+[3–5 bullet points: specific scope additions, discoveries, or requirements that would push the estimate above the High range]
 
 ---
 
 ### Payment Structure
 
-[Recommend a payment structure appropriate for this industry and engagement type. Use the Small Business range as the reference for specific amounts.
+[Industry-appropriate payment schedule. Use the Recommended estimate for specific amounts.
 - Projects: milestone-based with named trigger events and percentages
 - Retainers: monthly billing cycle, net terms, minimum commitment
 - Packages: upfront percentage + balance on delivery]
 
-*Estimates valid for 30 days. Final investment confirmed after discovery call.*
+*Estimate valid for 30 days. Final investment confirmed after discovery call.*
 
 ---
 
 ### Future Opportunities
 
-*Include this section ONLY if the requirements explicitly mention features or work intended for a future phase or roadmap.*
+*Include ONLY if the requirements explicitly mention features or work intended for a future phase or roadmap.*
 
-[List future-phase items with rough additional investment ranges by provider type. State clearly these are NOT included in current pricing above.]
+[List future-phase items with rough additional investment ranges. State clearly: NOT included in current pricing above.]
 
 *Omit this section entirely if the requirements contain no future-phase items.*
 </pricing>
@@ -315,7 +354,12 @@ Format each as:
 </questions>
 
 <agreement>
-Write a professional service agreement template appropriate for this specific type of engagement and industry. Do NOT use a generic software contract for non-software work.
+Write a professional service agreement template appropriate for this specific type of engagement, industry, AND provider category.
+
+Provider category context:
+- Freelancer → simple, plain-language service agreement; avoid overly formal enterprise clauses
+- Small Business → professional and approachable; standard business protections
+- Corporation / Agency → formal professional services agreement with full enterprise clauses
 
 Start with: "*⚠️ TEMPLATE ONLY — Consult a qualified attorney before use.*"
 

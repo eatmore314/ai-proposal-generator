@@ -2,11 +2,12 @@ import { NextRequest } from 'next/server';
 import { getClient, MODEL, MAX_TOKENS } from '@/lib/claude';
 import { extractPdfText } from '@/lib/pdf';
 import { buildProposalPrompt } from '@/lib/prompts';
-import type { AdvancedOptions, PricingModel, Currency, Region } from '@/types';
+import type { AdvancedOptions, PricingModel, Currency, Region, ProviderCategory } from '@/types';
 
-const VALID_PRICING_MODELS: PricingModel[] = ['auto', 'fixed', 'hourly', 'retainer', 'milestone', 'package'];
-const VALID_CURRENCIES:     Currency[]     = ['auto', 'USD', 'EUR', 'GBP', 'CAD', 'AUD'];
-const VALID_REGIONS:        Region[]       = ['auto', 'us', 'uk', 'eu', 'ca', 'au'];
+const VALID_PRICING_MODELS:    PricingModel[]     = ['auto', 'fixed', 'hourly', 'retainer', 'milestone', 'package'];
+const VALID_CURRENCIES:        Currency[]         = ['auto', 'USD', 'EUR', 'GBP', 'CAD', 'AUD'];
+const VALID_REGIONS:           Region[]           = ['auto', 'us', 'uk', 'eu', 'ca', 'au'];
+const VALID_PROVIDER_CATEGORIES: ProviderCategory[] = ['freelancer', 'small-business', 'agency'];
 
 function parseEnum<T extends string>(
   raw: FormDataEntryValue | null,
@@ -61,7 +62,13 @@ export async function POST(req: NextRequest) {
     region:               parseEnum(formData.get('region'), VALID_REGIONS, 'auto'),
   };
 
-  const prompt = buildProposalPrompt(pdfText.trim(), advancedOptions);
+  const providerCategory: ProviderCategory = parseEnum(
+    formData.get('providerCategory'),
+    VALID_PROVIDER_CATEGORIES,
+    'freelancer',
+  );
+
+  const prompt = buildProposalPrompt(pdfText.trim(), providerCategory, advancedOptions);
 
   const anthropicStream = getClient().messages.stream({
     model: MODEL,

@@ -23,7 +23,8 @@ export interface ProposalSections {
   agreement:   string;
 }
 
-export type GenerationStatus = 'idle' | 'generating' | 'done' | 'error';
+export type GenerationStatus  = 'idle' | 'generating' | 'done' | 'error';
+export type ProviderCategory  = 'freelancer' | 'small-business' | 'agency';
 
 export type PricingModel = 'auto' | 'fixed' | 'hourly' | 'retainer' | 'milestone' | 'package';
 export type Currency    = 'auto' | 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD';

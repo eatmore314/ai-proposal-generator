@@ -11,6 +11,7 @@ import UploadZone from '@/components/UploadZone';
 import GeneratingProgress from '@/components/GeneratingProgress';
 import ProposalOutput from '@/components/ProposalOutput';
 import IntroAnimation from '@/components/IntroAnimation';
+import ProviderCategorySelector from '@/components/ProviderCategorySelector';
 import type {
   SectionKey,
   ProposalSections,
@@ -19,6 +20,7 @@ import type {
   PricingModel,
   Currency,
   Region,
+  ProviderCategory,
 } from '@/types';
 import { SECTION_ORDER } from '@/lib/sectionConfig';
 
@@ -53,7 +55,7 @@ const DELIVERABLES = [
   { icon: ClipboardList, label: 'Project Summary'      },
   { icon: Layers,        label: 'Scope of Work'        },
   { icon: Clock,         label: 'Timeline'             },
-  { icon: DollarSign,    label: 'Pricing Comparison'   },
+  { icon: DollarSign,    label: 'Pricing'               },
   { icon: FileText,      label: 'Agreement Draft'      },
   { icon: HelpCircle,    label: 'Discovery Questions'  },
 ] as const;
@@ -67,9 +69,10 @@ const DEFAULT_ADVANCED: AdvancedOptions = {
 
 /* ── Page ── */
 export default function Home() {
-  const [file,            setFile]            = useState<File | null>(null);
-  const [advancedOptions, setAdvancedOptions] = useState<AdvancedOptions>(DEFAULT_ADVANCED);
-  const [showAdvanced,    setShowAdvanced]    = useState(false);
+  const [file,             setFile]             = useState<File | null>(null);
+  const [providerCategory, setProviderCategory] = useState<ProviderCategory>('freelancer');
+  const [advancedOptions,  setAdvancedOptions]  = useState<AdvancedOptions>(DEFAULT_ADVANCED);
+  const [showAdvanced,     setShowAdvanced]     = useState(false);
   const [status,          setStatus]          = useState<GenerationStatus>('idle');
   const [sections,      setSections]      = useState<Partial<ProposalSections>>({});
   const [activeSection, setActiveSection] = useState<SectionKey | null>(null);
@@ -106,6 +109,7 @@ export default function Home() {
     abortRef.current = new AbortController();
     const formData = new FormData();
     formData.append('pdf', file);
+    formData.append('providerCategory',    providerCategory);
     formData.append('industryOverride',    advancedOptions.industryOverride);
     formData.append('pricingModelOverride', advancedOptions.pricingModelOverride);
     formData.append('currency',            advancedOptions.currency);
@@ -287,10 +291,10 @@ export default function Home() {
                             maxWidth: '420px',
                           }}
                         >
-                          ProposalAI reads your requirements PDF, auto-detects the
-                          industry, and generates a complete proposal — including
-                          what freelancers, small businesses, and agencies would
-                          each charge for the work.
+                          Select your provider type, upload a client requirements
+                          PDF, and get a complete proposal — scope, timeline,
+                          estimate, and agreement — auto-calibrated for your
+                          industry and pricing category.
                         </p>
                       </div>
 
@@ -313,9 +317,9 @@ export default function Home() {
                         </p>
                         <div className="space-y-2.5">
                           {[
+                            'Select your provider category — Freelancer, Small Business, or Agency',
                             'Upload your client\'s requirements PDF',
-                            'AI detects the industry and calibrates pricing automatically',
-                            'Download a complete, professional proposal package',
+                            'Download a complete proposal calibrated to your pricing category',
                           ].map((text, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                               <span
@@ -404,14 +408,36 @@ export default function Home() {
                           boxShadow: '0 4px 24px rgba(17,17,24,0.05), 0 1px 3px rgba(17,17,24,0.04)',
                         }}
                       >
+                        {/* Provider category selector */}
                         <p
-                          className="mb-3.5"
                           style={{
                             fontSize: '10px',
                             fontWeight: 600,
                             letterSpacing: '0.1em',
                             textTransform: 'uppercase',
                             color: 'var(--c-text-3)',
+                            marginBottom: '8px',
+                          }}
+                        >
+                          Who is creating this proposal?
+                        </p>
+                        <ProviderCategorySelector
+                          value={providerCategory}
+                          onChange={setProviderCategory}
+                          disabled={isGenerating}
+                        />
+
+                        {/* Divider */}
+                        <div style={{ height: '1px', background: 'var(--c-border)', margin: '14px 0' }} aria-hidden="true" />
+
+                        <p
+                          style={{
+                            fontSize: '10px',
+                            fontWeight: 600,
+                            letterSpacing: '0.1em',
+                            textTransform: 'uppercase',
+                            color: 'var(--c-text-3)',
+                            marginBottom: '8px',
                           }}
                         >
                           Upload requirements
