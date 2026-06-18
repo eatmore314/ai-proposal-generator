@@ -165,7 +165,10 @@ export default function Home() {
         className="min-h-screen"
         style={{
           backgroundColor: 'var(--c-bg)',
-          backgroundImage: 'radial-gradient(ellipse 80% 50% at 65% -5%, rgba(201,151,58,0.07) 0%, transparent 60%)',
+          backgroundImage: [
+            'radial-gradient(ellipse 85% 55% at 70% -3%, rgba(201,151,58,0.11) 0%, transparent 55%)',
+            'radial-gradient(ellipse 55% 35% at 8% 78%, rgba(201,151,58,0.05) 0%, transparent 50%)',
+          ].join(', '),
         }}
       >
 
@@ -258,8 +261,8 @@ export default function Home() {
                           className="inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5 mb-6"
                           style={{
                             color: 'var(--c-text-2)',
-                            border: '1px solid var(--c-border)',
-                            background: 'var(--c-surface)',
+                            background: 'linear-gradient(var(--c-surface), var(--c-surface)) padding-box, linear-gradient(120deg, rgba(201,151,58,0.55) 0%, rgba(201,151,58,0.15) 50%, rgba(201,151,58,0.55) 100%) border-box',
+                            border: '1px solid transparent',
                           }}
                         >
                           <Sparkles className="w-3 h-3" style={{ color: 'var(--c-gold)' }} />
@@ -281,7 +284,12 @@ export default function Home() {
                           <br className="hidden sm:inline" />
                           {' '}Get a complete
                           <br className="hidden sm:inline" />
-                          {' '}project proposal.
+                          {' '}<span style={{
+                            background: 'linear-gradient(135deg, #c9973a 0%, #e0b55a 45%, #c9973a 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                          }}>project proposal.</span>
                         </h1>
 
                         <p
@@ -301,22 +309,16 @@ export default function Home() {
                       </div>
 
                       {/* Separator */}
-                      <div style={{ height: '1px', background: 'var(--c-border)' }} aria-hidden="true" />
+                      <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, var(--c-border) 15%, var(--c-border) 85%, transparent)' }} aria-hidden="true" />
 
                       {/* How it works */}
                       <div>
-                        <p
-                          className="mb-3"
-                          style={{
-                            fontSize: '10px',
-                            fontWeight: 600,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
-                            color: 'var(--c-text-3)',
-                          }}
-                        >
-                          How it works
-                        </p>
+                        <div className="mb-3.5" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div aria-hidden="true" style={{ width: '14px', height: '2px', borderRadius: '2px', background: 'var(--c-gold)', flexShrink: 0 }} />
+                          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--c-text-3)', margin: 0 }}>
+                            How it works
+                          </p>
+                        </div>
                         <div className="space-y-2.5">
                           {[
                             'Select your provider category — Freelancer, Small Business, or Agency',
@@ -326,13 +328,18 @@ export default function Home() {
                             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                               <span
                                 style={{
-                                  fontSize: '10px',
+                                  fontSize: '9.5px',
                                   fontWeight: 700,
-                                  color: 'var(--c-gold)',
-                                  letterSpacing: '0.06em',
-                                  marginTop: '3px',
+                                  color: '#92400e',
+                                  letterSpacing: '0.04em',
                                   flexShrink: 0,
                                   fontVariantNumeric: 'tabular-nums',
+                                  background: 'rgba(201,151,58,0.13)',
+                                  border: '1px solid rgba(201,151,58,0.30)',
+                                  borderRadius: '6px',
+                                  padding: '2px 7px',
+                                  lineHeight: 1.6,
+                                  marginTop: '1px',
                                 }}
                               >
                                 {String(i + 1).padStart(2, '0')}
@@ -346,22 +353,16 @@ export default function Home() {
                       </div>
 
                       {/* Separator */}
-                      <div style={{ height: '1px', background: 'var(--c-border)' }} aria-hidden="true" />
+                      <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, var(--c-border) 15%, var(--c-border) 85%, transparent)' }} aria-hidden="true" />
 
                       {/* Deliverables grid — 6 items, 3 clean rows */}
                       <div>
-                        <p
-                          className="mb-3"
-                          style={{
-                            fontSize: '10px',
-                            fontWeight: 600,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
-                            color: 'var(--c-text-3)',
-                          }}
-                        >
-                          What you&rsquo;ll receive
-                        </p>
+                        <div className="mb-3.5" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div aria-hidden="true" style={{ width: '14px', height: '2px', borderRadius: '2px', background: 'var(--c-gold)', flexShrink: 0 }} />
+                          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--c-text-3)', margin: 0 }}>
+                            What you&rsquo;ll receive
+                          </p>
+                        </div>
                         <div className="grid grid-cols-2 gap-2">
                           {DELIVERABLES.map(({ icon: Icon, label }) => (
                             <div
@@ -374,6 +375,7 @@ export default function Home() {
                                 borderRadius: '10px',
                                 border: '1px solid var(--c-border)',
                                 background: 'var(--c-surface)',
+                                boxShadow: '0 1px 4px rgba(17,17,24,0.045)',
                               }}
                             >
                               <div
@@ -385,7 +387,7 @@ export default function Home() {
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  background: 'var(--c-gold-light)',
+                                  background: 'linear-gradient(135deg, rgba(201,151,58,0.18) 0%, rgba(201,151,58,0.07) 100%)',
                                 }}
                               >
                                 <Icon style={{ width: '13px', height: '13px', color: 'var(--c-gold)' }} />
@@ -405,11 +407,23 @@ export default function Home() {
                         style={{
                           borderRadius: '20px',
                           padding: '20px',
-                          border: '1px solid var(--c-border)',
-                          background: 'var(--c-bg)',
-                          boxShadow: '0 4px 24px rgba(17,17,24,0.05), 0 1px 3px rgba(17,17,24,0.04)',
+                          border: '1px solid rgba(201,151,58,0.16)',
+                          background: 'linear-gradient(175deg, #ffffff 0%, #fdfcf8 100%)',
+                          boxShadow: '0 8px 40px rgba(17,17,24,0.09), 0 2px 8px rgba(17,17,24,0.05), inset 0 1px 0 rgba(255,255,255,0.95)',
+                          position: 'relative',
                         }}
                       >
+                        {/* Gold shimmer line at top edge of card */}
+                        <div
+                          aria-hidden="true"
+                          style={{
+                            position: 'absolute',
+                            top: 0, left: 0, right: 0,
+                            height: '2px',
+                            borderRadius: '20px 20px 0 0',
+                            background: 'linear-gradient(90deg, transparent 8%, rgba(201,151,58,0.45) 30%, rgba(201,151,58,0.75) 50%, rgba(201,151,58,0.45) 70%, transparent 92%)',
+                          }}
+                        />
                         {/* Provider category selector */}
                         <p
                           style={{
@@ -475,10 +489,14 @@ export default function Home() {
                             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                             className="w-full py-3.5 px-6 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 text-white"
                             style={{
-                              background: file ? 'var(--c-primary)' : '#9ca3af',
+                              background: file
+                                ? 'linear-gradient(150deg, #1e1b2e 0%, #111118 55%, #0f0e1d 100%)'
+                                : '#9ca3af',
                               cursor: file ? 'pointer' : 'not-allowed',
-                              boxShadow: '0 1px 2px rgba(17,17,24,0.18)',
-                              transition: 'background 0.2s',
+                              boxShadow: file
+                                ? '0 4px 20px rgba(17,17,24,0.32), 0 1px 3px rgba(17,17,24,0.20), inset 0 1px 0 rgba(255,255,255,0.06)'
+                                : 'none',
+                              transition: 'background 0.2s, box-shadow 0.2s',
                             }}
                             aria-label="Generate proposal"
                           >

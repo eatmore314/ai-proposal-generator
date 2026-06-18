@@ -48,12 +48,17 @@ export default function ProviderCategorySelector({ value, onChange, disabled }: 
               gap: '10px',
               padding: '9px 12px',
               borderRadius: '10px',
-              border: `1.5px solid ${selected ? 'rgba(201,151,58,0.55)' : 'var(--c-border)'}`,
-              background: selected ? 'rgba(201,151,58,0.06)' : 'var(--c-surface)',
+              border: `1.5px solid ${selected ? 'rgba(201,151,58,0.70)' : 'var(--c-border)'}`,
+              background: selected
+                ? 'linear-gradient(135deg, rgba(201,151,58,0.10) 0%, rgba(201,151,58,0.04) 100%)'
+                : 'var(--c-surface)',
+              boxShadow: selected
+                ? '0 2px 10px rgba(201,151,58,0.12), inset 0 1px 0 rgba(255,255,255,0.80)'
+                : 'none',
               cursor: disabled ? 'not-allowed' : 'pointer',
               textAlign: 'left',
               opacity: disabled ? 0.5 : 1,
-              transition: 'border-color 0.15s, background 0.15s',
+              transition: 'border-color 0.15s, background 0.15s, box-shadow 0.15s',
             }}
           >
             <div style={{
@@ -64,7 +69,7 @@ export default function ProviderCategorySelector({ value, onChange, disabled }: 
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: selected ? 'rgba(201,151,58,0.14)' : 'var(--c-bg)',
+              background: selected ? 'linear-gradient(135deg, rgba(201,151,58,0.22) 0%, rgba(201,151,58,0.10) 100%)' : 'var(--c-bg)',
               border: `1px solid ${selected ? 'rgba(201,151,58,0.30)' : 'var(--c-border)'}`,
               transition: 'background 0.15s, border-color 0.15s',
             }}>
