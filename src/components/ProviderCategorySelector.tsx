@@ -80,7 +80,7 @@ export default function ProviderCategorySelector({ value, onChange, disabled }: 
               <p style={{ fontSize: '12.5px', fontWeight: 600, color: selected ? 'var(--c-text)' : 'var(--c-text-2)', lineHeight: 1, margin: 0 }}>
                 {label}
               </p>
-              <p style={{ fontSize: '11px', color: 'var(--c-text-3)', marginTop: '2px', lineHeight: 1.3, margin: '2px 0 0 0' }}>
+              <p style={{ fontSize: '11px', color: 'var(--c-text-3)', lineHeight: 1.3, margin: '2px 0 0 0', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 {desc}
               </p>
             </div>

@@ -370,8 +370,8 @@ export default function Home() {
                               style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '10px',
-                                padding: '10px 12px',
+                                gap: '8px',
+                                padding: '9px 10px',
                                 borderRadius: '10px',
                                 border: '1px solid var(--c-border)',
                                 background: 'var(--c-surface)',
@@ -380,9 +380,9 @@ export default function Home() {
                             >
                               <div
                                 style={{
-                                  width: '28px',
-                                  height: '28px',
-                                  borderRadius: '8px',
+                                  width: '26px',
+                                  height: '26px',
+                                  borderRadius: '7px',
                                   flexShrink: 0,
                                   display: 'flex',
                                   alignItems: 'center',
@@ -390,9 +390,9 @@ export default function Home() {
                                   background: 'linear-gradient(135deg, rgba(201,151,58,0.18) 0%, rgba(201,151,58,0.07) 100%)',
                                 }}
                               >
-                                <Icon style={{ width: '13px', height: '13px', color: 'var(--c-gold)' }} />
+                                <Icon style={{ width: '12px', height: '12px', color: 'var(--c-gold)' }} />
                               </div>
-                              <span style={{ fontSize: '12.5px', fontWeight: 500, color: 'var(--c-text)' }}>
+                              <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--c-text)', lineHeight: 1.25 }}>
                                 {label}
                               </span>
                             </div>
