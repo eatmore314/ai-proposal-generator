@@ -407,23 +407,12 @@ export default function Home() {
                         style={{
                           borderRadius: '20px',
                           padding: '20px',
-                          border: '1px solid rgba(201,151,58,0.16)',
-                          background: 'linear-gradient(175deg, #ffffff 0%, #fdfcf8 100%)',
-                          boxShadow: '0 8px 40px rgba(17,17,24,0.09), 0 2px 8px rgba(17,17,24,0.05), inset 0 1px 0 rgba(255,255,255,0.95)',
+                          background: 'linear-gradient(#fdfcf8, #fdfcf8) padding-box, linear-gradient(145deg, #c9973a 0%, #f0c96a 35%, #c9973a 65%, #f0c96a 100%) border-box',
+                          border: '2px solid transparent',
+                          boxShadow: '0 8px 40px rgba(201,151,58,0.18), 0 2px 8px rgba(17,17,24,0.05), inset 0 1px 0 rgba(255,255,255,0.95)',
                           position: 'relative',
                         }}
                       >
-                        {/* Gold shimmer line at top edge of card */}
-                        <div
-                          aria-hidden="true"
-                          style={{
-                            position: 'absolute',
-                            top: 0, left: 0, right: 0,
-                            height: '2px',
-                            borderRadius: '20px 20px 0 0',
-                            background: 'linear-gradient(90deg, transparent 8%, rgba(201,151,58,0.45) 30%, rgba(201,151,58,0.75) 50%, rgba(201,151,58,0.45) 70%, transparent 92%)',
-                          }}
-                        />
                         {/* Provider category selector */}
                         <p
                           style={{
